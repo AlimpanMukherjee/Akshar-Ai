@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akshar AI — लेखन सहायक</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=Yatra+One&family=Rajdhani:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --saffron: #FF9933;
+      --deep-saffron: #E07800;
+      --gold: #D4AF37;
+      --gold-light: #F5D76E;
+      --crimson: #C0392B;
+      --maroon: #800020;
+      --peacock-blue: #0A4D68;
+      --peacock-teal: #088395;
+      --jade: #00A896;
+      --purple: #A855F7;
+      --purple-light: #C084FC;
+      --dark-bg: #0D0A07;
+      --dark-card: #13100C;
+      --dark-surface: #1A1510;
+      --dark-border: #2E2418;
+      --dark-border-light: #3D3020;
+      --text-primary: #F5E6C8;
+      --text-secondary: #B8A07A;
+      --text-muted: #6B5540;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      color: var(--text-primary);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background-image:
+        radial-gradient(ellipse at 20% 20%, rgba(255, 153, 51, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(8, 131, 149, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(212, 175, 55, 0.02) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .mandala-bg {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 900px;
+      height: 900px;
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 0;
+      animation: slowRotate 120s linear infinite;
+    }
+
+    @keyframes slowRotate {
+      from {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    /* ── Header ──────────────────────────────────────── */
+    header {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 48px 24px 32px;
+      border-bottom: 1px solid var(--dark-border);
+      background: linear-gradient(180deg, rgba(255, 153, 51, 0.05) 0%, transparent 100%);
+    }
+
+    .header-top-border {
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--saffron), var(--gold), var(--saffron), transparent);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .logo-devanagari {
+      font-family: 'Tiro Devanagari Hindi', serif;
+      font-size: 14px;
+      color: var(--gold);
+      letter-spacing: 8px;
+      opacity: 0.7;
+      margin-bottom: 4px;
+    }
+
+    .logo-main {
+      font-family: 'Yatra One', cursive;
+      font-size: clamp(42px, 8vw, 72px);
+      color: var(--saffron);
+      letter-spacing: 4px;
+      line-height: 1;
+      text-shadow: 0 0 60px rgba(255, 153, 51, 0.4), 0 0 120px rgba(255, 153, 51, 0.15);
+    }
+
+    .logo-main .ai-badge {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark-bg);
+      background: linear-gradient(135deg, var(--saffron), var(--gold));
+      padding: 2px 8px;
+      border-radius: 4px;
+      vertical-align: super;
+      letter-spacing: 1px;
+    }
+
+    .logo-tagline {
+      font-family: 'Noto Serif', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      letter-spacing: 2px;
+    }
+
+    .header-decoration {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .chakra-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--saffron);
+      box-shadow: 0 0 10px var(--saffron);
+    }
+
+    .chakra-dot:nth-child(2) {
+      background: var(--gold);
+      box-shadow: 0 0 10px var(--gold);
+    }
+
+    .chakra-dot:nth-child(3) {
+      background: var(--jade);
+      box-shadow: 0 0 10px var(--jade);
+    }
+
+    .header-line {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+
+    .header-line:last-child {
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    /* ── Input Section ───────────────────────────────── */
+    .input-section {
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      color: var(--saffron);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--dark-border-light), transparent);
+    }
+
+    .input-card {
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border-light);
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .input-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--saffron), var(--gold), var(--jade));
+    }
+
+    .input-card::after {
+      content: '❋';
+      position: absolute;
+      bottom: 12px;
+      right: 16px;
+      font-size: 20px;
+      color: var(--dark-border-light);
+      pointer-events: none;
+    }
+
+    textarea.main-input {
+      width: 100%;
+      min-height: 180px;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 24px;
+      color: var(--text-primary);
+      font-family: 'Noto Serif', serif;
+      font-size: 16px;
+      line-height: 1.7;
+      resize: vertical;
+    }
+
+    textarea.main-input::placeholder {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .input-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px 16px;
+      border-top: 1px solid var(--dark-border);
+    }
+
+    .word-count {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    .clear-btn {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      background: none;
+      border: 1px solid var(--dark-border);
+      padding: 6px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .clear-btn:hover {
+      color: var(--saffron);
+      border-color: var(--saffron);
+    }
+
+    /* ── Feature Cards ───────────────────────────────── */
+    .features-section {
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+
+    .features-title {
+      font-family: 'Yatra One', cursive;
+      font-size: 13px;
+      color: var(--gold);
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      border-radius: 2px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .feature-card:hover {
+      border-color: var(--dark-border-light);
+      transform: translateY(-2px);
+    }
+
+    .feature-card.grammar {
+      border-top: 2px solid var(--saffron);
+    }
+
+    .feature-card.quality {
+      border-top: 2px solid var(--gold);
+    }
+
+    .feature-card.summarize {
+      border-top: 2px solid var(--peacock-teal);
+    }
+
+    .feature-card.elaborate {
+      border-top: 2px solid var(--jade);
+    }
+
+    .feature-card.purpose {
+      border-top: 2px solid var(--crimson);
+    }
+
+    .feature-card.hinglish {
+      border-top: 2px solid var(--purple);
+    }
+
+    .feature-card.grammar::before {
+      background: radial-gradient(ellipse at top left, rgba(255, 153, 51, 0.08), transparent 70%);
+    }
+
+    .feature-card.quality::before {
+      background: radial-gradient(ellipse at top left, rgba(212, 175, 55, 0.08), transparent 70%);
+    }
+
+    .feature-card.summarize::before {
+      background: radial-gradient(ellipse at top left, rgba(8, 131, 149, 0.08), transparent 70%);
+    }
+
+    .feature-card.elaborate::before {
+      background: radial-gradient(ellipse at top left, rgba(0, 168, 150, 0.08), transparent 70%);
+    }
+
+    .feature-card.purpose::before {
+      background: radial-gradient(ellipse at top left, rgba(192, 57, 43, 0.08), transparent 70%);
+    }
+
+    .feature-card.hinglish::before {
+      background: radial-gradient(ellipse at top left, rgba(168, 85, 247, 0.08), transparent 70%);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .feature-number {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      font-family: 'Tiro Devanagari Hindi', serif;
+      font-size: 28px;
+      color: var(--dark-border-light);
+      line-height: 1;
+    }
+
+    .feature-name-hindi {
+      font-family: 'Tiro Devanagari Hindi', serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      letter-spacing: 1px;
+    }
+
+    .feature-name {
+      font-family: 'Yatra One', cursive;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .feature-card.grammar .feature-name {
+      color: var(--saffron);
+    }
+
+    .feature-card.quality .feature-name {
+      color: var(--gold);
+    }
+
+    .feature-card.summarize .feature-name {
+      color: var(--peacock-teal);
+    }
+
+    .feature-card.elaborate .feature-name {
+      color: var(--jade);
+    }
+
+    .feature-card.purpose .feature-name {
+      color: #E74C3C;
+    }
+
+    .feature-card.hinglish .feature-name {
+      color: var(--purple-light);
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .feature-btn {
+      width: 100%;
+      padding: 10px 20px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border: 1px solid;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .feature-card.grammar .feature-btn {
+      color: var(--saffron);
+      border-color: rgba(255, 153, 51, 0.3);
+    }
+
+    .feature-card.grammar .feature-btn:hover {
+      background: rgba(255, 153, 51, 0.1);
+      border-color: var(--saffron);
+    }
+
+    .feature-card.quality .feature-btn {
+      color: var(--gold);
+      border-color: rgba(212, 175, 55, 0.3);
+    }
+
+    .feature-card.quality .feature-btn:hover {
+      background: rgba(212, 175, 55, 0.1);
+      border-color: var(--gold);
+    }
+
+    .feature-card.summarize .feature-btn {
+      color: var(--peacock-teal);
+      border-color: rgba(8, 131, 149, 0.3);
+    }
+
+    .feature-card.summarize .feature-btn:hover {
+      background: rgba(8, 131, 149, 0.1);
+      border-color: var(--peacock-teal);
+    }
+
+    .feature-card.elaborate .feature-btn {
+      color: var(--jade);
+      border-color: rgba(0, 168, 150, 0.3);
+    }
+
+    .feature-card.elaborate .feature-btn:hover {
+      background: rgba(0, 168, 150, 0.1);
+      border-color: var(--jade);
+    }
+
+    .feature-card.purpose .feature-btn {
+      color: #E74C3C;
+      border-color: rgba(231, 76, 60, 0.3);
+    }
+
+    .feature-card.purpose .feature-btn:hover {
+      background: rgba(231, 76, 60, 0.1);
+      border-color: #E74C3C;
+    }
+
+    .feature-card.hinglish .feature-btn {
+      color: var(--purple-light);
+      border-color: rgba(192, 132, 252, 0.3);
+    }
+
+    .feature-card.hinglish .feature-btn:hover {
+      background: rgba(192, 132, 252, 0.1);
+      border-color: var(--purple-light);
+    }
+
+    /* ── Result Section ──────────────────────────────── */
+    .result-section {
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+      margin: 0 auto 60px;
+      padding: 0 24px;
+      display: none;
+    }
+
+    .result-section.show {
+      display: block;
+    }
+
+    .result-card {
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border-light);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--dark-border);
+      background: var(--dark-surface);
+    }
+
+    .result-title {
+      font-family: 'Yatra One', cursive;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .result-badge {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      padding: 3px 10px;
+      border-radius: 1px;
+    }
+
+    .grammar-badge {
+      background: rgba(255, 153, 51, 0.15);
+      color: var(--saffron);
+      border: 1px solid rgba(255, 153, 51, 0.3);
+    }
+
+    .quality-badge {
+      background: rgba(212, 175, 55, 0.15);
+      color: var(--gold);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .summarize-badge {
+      background: rgba(8, 131, 149, 0.15);
+      color: var(--peacock-teal);
+      border: 1px solid rgba(8, 131, 149, 0.3);
+    }
+
+    .elaborate-badge {
+      background: rgba(0, 168, 150, 0.15);
+      color: var(--jade);
+      border: 1px solid rgba(0, 168, 150, 0.3);
+    }
+
+    .purpose-badge {
+      background: rgba(192, 57, 43, 0.15);
+      color: #E74C3C;
+      border: 1px solid rgba(192, 57, 43, 0.3);
+    }
+
+    .hinglish-badge {
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--purple-light);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .copy-btn {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      background: none;
+      border: 1px solid var(--dark-border);
+      padding: 6px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .result-body {
+      padding: 28px 24px;
+      min-height: 120px;
+      font-family: 'Noto Serif', serif;
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+    }
+
+    .result-body.empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading-state {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--text-muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+
+    .loading-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .loading-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--saffron);
+      animation: dotPulse 1.4s ease-in-out infinite;
+    }
+
+    .loading-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+      background: var(--gold);
+    }
+
+    .loading-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+      background: var(--jade);
+    }
+
+    @keyframes dotPulse {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0.6);
+        opacity: 0.4;
+      }
+
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* ── Purpose Modal ───────────────────────────────── */
+    .purpose-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .purpose-modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border-light);
+      border-top: 2px solid var(--crimson);
+      max-width: 500px;
+      width: 100%;
+      padding: 32px;
+      animation: modalIn 0.3s ease;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-title {
+      font-family: 'Yatra One', cursive;
+      font-size: 22px;
+      color: #E74C3C;
+      margin-bottom: 8px;
+    }
+
+    .modal-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .purpose-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .purpose-option {
+      padding: 12px 16px;
+      background: var(--dark-surface);
+      border: 1px solid var(--dark-border);
+      color: var(--text-secondary);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      letter-spacing: 1px;
+    }
+
+    .purpose-option:hover,
+    .purpose-option.selected {
+      border-color: var(--crimson);
+      color: var(--text-primary);
+      background: rgba(192, 57, 43, 0.1);
+    }
+
+    .purpose-option.selected {
+      border-color: #E74C3C;
+    }
+
+    .custom-purpose-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .custom-input {
+      flex: 1;
+      background: var(--dark-surface);
+      border: 1px solid var(--dark-border);
+      color: var(--text-primary);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .custom-input:focus {
+      border-color: var(--crimson);
+    }
+
+    .custom-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .modal-confirm {
+      flex: 1;
+      padding: 12px;
+      background: linear-gradient(135deg, #C0392B, #E74C3C);
+      border: none;
+      color: white;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .modal-confirm:hover {
+      opacity: 0.85;
+    }
+
+    .modal-cancel {
+      padding: 12px 20px;
+      background: transparent;
+      border: 1px solid var(--dark-border);
+      color: var(--text-muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .modal-cancel:hover {
+      border-color: var(--text-muted);
+      color: var(--text-secondary);
+    }
+
+    /* ── Footer ──────────────────────────────────────── */
+    footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 32px 24px;
+      border-top: 1px solid var(--dark-border);
+    }
+
+    .footer-ornament {
+      font-family: 'Tiro Devanagari Hindi', serif;
+      font-size: 24px;
+      color: var(--dark-border-light);
+      letter-spacing: 16px;
+      margin-bottom: 12px;
+    }
+
+    .footer-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+    }
+
+    @media (max-width: 600px) {
+      .purpose-options {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Mandala SVG -->
+  <svg class="mandala-bg" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#D4AF37" stroke-width="0.5">
+      <circle cx="400" cy="400" r="50" />
+      <circle cx="400" cy="400" r="100" />
+      <circle cx="400" cy="400" r="150" />
+      <circle cx="400" cy="400" r="200" />
+      <circle cx="400" cy="400" r="250" />
+      <circle cx="400" cy="400" r="300" />
+      <circle cx="400" cy="400" r="350" />
+      <circle cx="400" cy="400" r="390" />
+      <g transform="translate(400,400)">
+        <ellipse rx="30" ry="80" transform="rotate(0)" />
+        <ellipse rx="30" ry="80" transform="rotate(30)" />
+        <ellipse rx="30" ry="80" transform="rotate(60)" />
+        <ellipse rx="30" ry="80" transform="rotate(90)" />
+        <ellipse rx="30" ry="80" transform="rotate(120)" />
+        <ellipse rx="30" ry="80" transform="rotate(150)" />
+        <ellipse rx="30" ry="80" transform="rotate(180)" />
+        <ellipse rx="30" ry="80" transform="rotate(210)" />
+        <ellipse rx="30" ry="80" transform="rotate(240)" />
+        <ellipse rx="30" ry="80" transform="rotate(270)" />
+        <ellipse rx="30" ry="80" transform="rotate(300)" />
+        <ellipse rx="30" ry="80" transform="rotate(330)" />
+      </g>
+      <g transform="translate(400,400)">
+        <ellipse rx="20" ry="130" transform="rotate(15)" />
+        <ellipse rx="20" ry="130" transform="rotate(45)" />
+        <ellipse rx="20" ry="130" transform="rotate(75)" />
+        <ellipse rx="20" ry="130" transform="rotate(105)" />
+        <ellipse rx="20" ry="130" transform="rotate(135)" />
+        <ellipse rx="20" ry="130" transform="rotate(165)" />
+        <ellipse rx="20" ry="130" transform="rotate(195)" />
+        <ellipse rx="20" ry="130" transform="rotate(225)" />
+        <ellipse rx="20" ry="130" transform="rotate(255)" />
+        <ellipse rx="20" ry="130" transform="rotate(285)" />
+        <ellipse rx="20" ry="130" transform="rotate(315)" />
+        <ellipse rx="20" ry="130" transform="rotate(345)" />
+      </g>
+    </g>
+  </svg>
+
+  <header>
+    <div class="header-top-border"></div>
+    <div class="logo-devanagari">अक्षर — लेखन सहायक</div>
+    <div class="logo-main">Akshar <span class="ai-badge">AI</span></div>
+    <div class="logo-tagline">Your Intelligent Writing Companion — शब्दों की शक्ति</div>
+    <div class="header-decoration">
+      <div class="header-line"></div>
+      <div class="chakra-dot"></div>
+      <div class="chakra-dot"></div>
+      <div class="chakra-dot"></div>
+      <div class="header-line"></div>
+    </div>
+  </header>
+
+  <!-- Input -->
+  <div class="input-section">
+    <div class="section-label">✦ आपका लेखन — Your Writing</div>
+    <div class="input-card">
+      <textarea class="main-input" id="mainInput"
+        placeholder="Paste or type your English (or Hinglish) text here… Akshar AI will analyse and transform it with the wisdom of a thousand scribes."
+        oninput="updateWordCount()"></textarea>
+      <div class="input-footer">
+        <div class="word-count" id="wordCount">0 words · 0 characters</div>
+        <button class="clear-btn" onclick="clearAll()">✕ CLEAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Cards -->
+  <div class="features-section">
+    <div class="features-title">✦ ✦ &nbsp; Choose Your Seva — सेवा चुनें &nbsp; ✦ ✦</div>
+    <div class="features-grid">
+
+      <div class="feature-card grammar">
+        <div class="feature-number">१</div>
+        <span class="feature-icon">🪔</span>
+        <div class="feature-name-hindi">व्याकरण सुधार</div>
+        <div class="feature-name">Grammar Fix</div>
+        <div class="feature-desc">Detects and corrects grammatical errors, punctuation mistakes, spelling issues, and
+          sentence structure problems with precision.</div>
+        <button class="feature-btn" onclick="runFeature('grammar')">✦ Fix Grammar</button>
+      </div>
+
+      <div class="feature-card quality">
+        <div class="feature-number">२</div>
+        <span class="feature-icon">✨</span>
+        <div class="feature-name-hindi">गुणवत्ता सुधार</div>
+        <div class="feature-name">Enhance Quality</div>
+        <div class="feature-desc">Elevates vocabulary, improves flow and readability, refines tone, and transforms
+          ordinary writing into polished, compelling prose.</div>
+        <button class="feature-btn" onclick="runFeature('quality')">✦ Enhance Writing</button>
+      </div>
+
+      <div class="feature-card summarize">
+        <div class="feature-number">३</div>
+        <span class="feature-icon">🧿</span>
+        <div class="feature-name-hindi">सारांश</div>
+        <div class="feature-name">Summarise</div>
+        <div class="feature-desc">Condenses your writing into a clear, concise summary capturing all key points, ideas,
+          and essential meaning without losing context.</div>
+        <button class="feature-btn" onclick="runFeature('summarize')">✦ Summarise</button>
+      </div>
+
+      <div class="feature-card elaborate">
+        <div class="feature-number">४</div>
+        <span class="feature-icon">🌿</span>
+        <div class="feature-name-hindi">विस्तार</div>
+        <div class="feature-name">Elaborate</div>
+        <div class="feature-desc">Expands your writing with additional detail, context, examples, and depth — turning
+          brief notes into comprehensive, rich content.</div>
+        <button class="feature-btn" onclick="runFeature('elaborate')">✦ Elaborate</button>
+      </div>
+
+      <div class="feature-card purpose">
+        <div class="feature-number">५</div>
+        <span class="feature-icon">🪷</span>
+        <div class="feature-name-hindi">उद्देश्य अनुसार</div>
+        <div class="feature-name">Purpose Rewrite</div>
+        <div class="feature-desc">Tell Akshar the purpose of your writing — formal report, love letter, job application,
+          or more — and it rewrites accordingly.</div>
+        <button class="feature-btn" onclick="openPurposeModal()">✦ Set Purpose</button>
+      </div>
+
+      <div class="feature-card hinglish">
+        <div class="feature-number">६</div>
+        <span class="feature-icon">🇮🇳</span>
+        <div class="feature-name-hindi">हिंग्लिश → अंग्रेज़ी</div>
+        <div class="feature-name">Hinglish → English</div>
+        <div class="feature-desc">Paste your Hinglish text — that beautiful mix of Hindi and English we all speak — and
+          Akshar converts it into clean, fluent, proper English.</div>
+        <button class="feature-btn" onclick="runFeature('hinglish')">✦ Convert to English</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Result Section -->
+  <div class="result-section" id="resultSection">
+    <div class="section-label" id="resultLabel">✦ परिणाम — Result</div>
+    <div class="result-card" id="resultCard">
+      <div class="result-header">
+        <div class="result-title" id="resultTitle">
+          <span id="resultTitleText">Akshar AI</span>
+          <span class="result-badge" id="resultBadge">PROCESSING</span>
+        </div>
+        <button class="copy-btn" onclick="copyResult()">⊕ COPY</button>
+      </div>
+      <div class="result-body empty" id="resultBody">
+        <div class="loading-state">
+          <div class="loading-dots"><span></span><span></span><span></span></div>
+          <span>Akshar is thinking…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Purpose Modal -->
+  <div class="purpose-modal" id="purposeModal">
+    <div class="modal-box">
+      <div class="modal-title">🪷 Purpose — उद्देश्य</div>
+      <div class="modal-subtitle">What is your writing meant to accomplish?</div>
+      <div class="purpose-options" id="purposeOptions">
+        <button class="purpose-option" onclick="selectPurpose(this,'Professional Email')">📧 Professional Email</button>
+        <button class="purpose-option" onclick="selectPurpose(this,'Job Application')">💼 Job Application</button>
+        <button class="purpose-option" onclick="selectPurpose(this,'Academic Essay')">🎓 Academic Essay</button>
+        <button class="purpose-option" onclick="selectPurpose(this,'Business Report')">📊 Business Report</button>
+        <button class="purpose-option" onclick="selectPurpose(this,'Creative Story')">📖 Creative Story</button>
+        <button class="purpose-option" onclick="selectPurpose(this,'Social Media Post')">📱 Social Media</button>
+        <button class="purpose-option" onclick="selectPurpose(this,'Personal Letter')">💌 Personal Letter</button>
+        <button class="purpose-option" onclick="selectPurpose(this,'Product Description')">🏷️ Product Desc.</button>
+      </div>
+      <div class="custom-purpose-row">
+        <input type="text" class="custom-input" id="customPurpose" placeholder="Or describe your own purpose…">
+      </div>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closePurposeModal()">CANCEL</button>
+        <button class="modal-confirm" onclick="confirmPurpose()">✦ REWRITE FOR PURPOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-ornament">❋ ॐ ❋ ॐ ❋</div>
+    <div class="footer-text">AKSHAR AI — शब्दों की शक्ति · Powered by LLaMA 3.1 via Groq · Made with ❤️ for Indian
+      wordsmiths</div>
+  </footer>
+
+  <script>
+    // ── Points to your running backend ──────────────────────────
+    // When running locally:  http://localhost:3000/api/akshar
+    // When deployed, change to your server's URL e.g.: https://yourdomain.com/api/akshar
+    const API_URL = "/api/akshar";
+
+    let selectedPurpose = "";
+    let currentResultText = "";
+
+    // ── Helpers ──────────────────────────────────────────────────
+    function updateWordCount() {
+      const text = document.getElementById("mainInput").value;
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+      document.getElementById("wordCount").textContent =
+        `${words} word${words !== 1 ? "s" : ""} · ${text.length} character${text.length !== 1 ? "s" : ""}`;
+    }
+
+    function clearAll() {
+      document.getElementById("mainInput").value = "";
+      updateWordCount();
+      document.getElementById("resultSection").classList.remove("show");
+    }
+
+    function getInputText() {
+      return document.getElementById("mainInput").value.trim();
+    }
+
+    // ── Prompts ───────────────────────────────────────────────────
+    const prompts = {
+      grammar: (t) => `You are an expert English grammar editor. Carefully analyse the following text and fix ALL grammatical errors, punctuation mistakes, spelling errors, and awkward sentence structures.
+
+Return your response in this EXACT format:
+ORIGINAL_ISSUES:
+[List each specific error found, one per line, format: "• [error type]: original phrase → corrected phrase"]
+
+CORRECTED_TEXT:
+[The fully corrected text]
+
+Text to fix:
+"${t}"`,
+
+      quality: (t) => `You are a master English prose stylist. Improve the quality of the following text by enhancing vocabulary, improving sentence flow, making it more engaging, and elevating the overall style while preserving the original meaning.
+
+Return ONLY the improved text, no preamble.
+
+Text:
+"${t}"`,
+
+      summarize: (t) => `You are an expert at distilling complex text into clear, concise summaries. Summarise the following text capturing all key points. Keep it to ~25% of the original length.
+
+Return ONLY the summary, no preamble.
+
+Text:
+"${t}"`,
+
+      elaborate: (t) => `You are an expert writer who excels at expanding content. Elaborate on the following text by adding relevant context, examples, explanations, and depth. Expand substantially while keeping it cohesive.
+
+Return ONLY the elaborated text, no preamble.
+
+Text:
+"${t}"`,
+
+      hinglish: (t) => `You are an expert linguist fluent in both Hindi and English, deeply familiar with Indian Hinglish. Convert the following Hinglish text into clean, fluent, grammatically correct English.
+
+Rules:
+- Translate all Hindi words and phrases into natural English equivalents
+- Preserve the original meaning, intent, emotion, and tone perfectly
+- Make the English sound natural and idiomatic
+- For Hindi idioms with no direct equivalent, use the closest natural English expression
+
+Return in this EXACT format:
+HINGLISH INPUT:
+[Quote the original]
+
+ENGLISH OUTPUT:
+[The clean English conversion]
+
+NOTES:
+[Any interesting translation choices — write "None" if nothing notable]
+
+Hinglish text:
+"${t}"`
+    };
+
+    // ── Run a feature ─────────────────────────────────────────────
+    async function runFeature(type) {
+      const text = getInputText();
+      if (!text) { alert("Please enter some text first — अपना लेखन यहाँ डालें!"); return; }
+
+      const cfg = {
+        grammar: { title: "🪔 Grammar Fix", badge: "GRAMMAR", cls: "grammar-badge" },
+        quality: { title: "✨ Enhanced Writing", badge: "ENHANCED", cls: "quality-badge" },
+        summarize: { title: "🧿 Summary", badge: "SUMMARISED", cls: "summarize-badge" },
+        elaborate: { title: "🌿 Elaborated", badge: "ELABORATED", cls: "elaborate-badge" },
+        hinglish: { title: "🇮🇳 Hinglish → English", badge: "HINGLISH", cls: "hinglish-badge" },
+      };
+
+      showResultSection(cfg[type].title, cfg[type].badge, cfg[type].cls);
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: prompts[type](text) })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Server error");
+
+        if (type === "grammar") renderGrammarResult(data.result);
+        else if (type === "hinglish") renderHinglishResult(data.result);
+        else renderResult(data.result);
+
+      } catch (err) {
+        renderResult("⚠️ Error: " + err.message);
+      }
+    }
+
+    // ── Purpose flow ──────────────────────────────────────────────
+    function openPurposeModal() {
+      if (!getInputText()) { alert("Please enter some text first!"); return; }
+      selectedPurpose = "";
+      document.getElementById("customPurpose").value = "";
+      document.querySelectorAll(".purpose-option").forEach(b => b.classList.remove("selected"));
+      document.getElementById("purposeModal").classList.add("show");
+    }
+    function closePurposeModal() { document.getElementById("purposeModal").classList.remove("show"); }
+    function selectPurpose(el, p) {
+      document.querySelectorAll(".purpose-option").forEach(b => b.classList.remove("selected"));
+      el.classList.add("selected");
+      selectedPurpose = p;
+      document.getElementById("customPurpose").value = "";
+    }
+    async function confirmPurpose() {
+      const purpose = document.getElementById("customPurpose").value.trim() || selectedPurpose;
+      if (!purpose) { alert("Please select or describe a purpose!"); return; }
+      closePurposeModal();
+
+      const text = getInputText();
+      showResultSection(`🪷 ${purpose} Rewrite`, "PURPOSE REWRITE", "purpose-badge");
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: `You are an expert writer. Rewrite the following text specifically for this purpose: "${purpose}".
+Adapt tone, vocabulary, structure, formality, and style to perfectly suit a "${purpose}". Fix grammar errors too.
+Return ONLY the rewritten text, no preamble.
+
+Original text:
+"${text}"`
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Server error");
+        renderResult(data.result);
+      } catch (err) {
+        renderResult("⚠️ Error: " + err.message);
+      }
+    }
+
+    // ── UI helpers ────────────────────────────────────────────────
+    function showResultSection(title, badge, badgeClass) {
+      const section = document.getElementById("resultSection");
+      section.classList.add("show");
+      document.getElementById("resultTitleText").textContent = title;
+      const badgeEl = document.getElementById("resultBadge");
+      badgeEl.textContent = badge; badgeEl.className = `result-badge ${badgeClass}`;
+      const body = document.getElementById("resultBody");
+      body.className = "result-body empty";
+      body.innerHTML = `<div class="loading-state"><div class="loading-dots"><span></span><span></span><span></span></div><span>Akshar is thinking…</span></div>`;
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function renderResult(text) {
+      currentResultText = text;
+      const body = document.getElementById("resultBody");
+      body.className = "result-body"; body.textContent = "";
+      let i = 0;
+      const speed = Math.max(5, Math.min(18, 2800 / text.length));
+      (function type() {
+        if (i < text.length) { body.textContent += text[i++]; setTimeout(type, speed); }
+      })();
+    }
+
+    function renderGrammarResult(result) {
+      currentResultText = result;
+      const body = document.getElementById("resultBody");
+      body.className = "result-body";
+      const parts = result.split("CORRECTED_TEXT:");
+      const issues = parts[0].replace("ORIGINAL_ISSUES:", "").trim();
+      const corrected = parts[1] ? parts[1].trim() : result;
+      body.innerHTML = `
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--saffron);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--dark-border);">ISSUES FOUND — त्रुटियाँ</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:14px;color:var(--text-secondary);line-height:1.8;white-space:pre-wrap;">${issues || "No significant errors found."}</div>
+      </div>
+      <div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--jade);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--dark-border);">CORRECTED TEXT — सुधरा हुआ</div>
+        <div style="font-family:'Noto Serif',serif;font-size:15px;line-height:1.8;color:var(--text-primary);">${corrected}</div>
+      </div>`;
+    }
+
+    function renderHinglishResult(result) {
+      currentResultText = result;
+      const body = document.getElementById("resultBody");
+      body.className = "result-body";
+      const inputM = result.match(/HINGLISH INPUT:\s*([\s\S]*?)(?=ENGLISH OUTPUT:|$)/i);
+      const outputM = result.match(/ENGLISH OUTPUT:\s*([\s\S]*?)(?=NOTES|$)/i);
+      const notesM = result.match(/NOTES[^:]*:\s*([\s\S]*?)$/i);
+      const original = inputM ? inputM[1].trim().replace(/^"|"$/g, "") : "";
+      const converted = outputM ? outputM[1].trim().replace(/^"|"$/g, "") : result;
+      const notes = notesM ? notesM[1].trim() : "";
+      body.innerHTML = `
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--text-muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--dark-border);">🇮🇳 HINGLISH INPUT — मूल पाठ</div>
+        <div style="font-family:'Noto Serif',serif;font-size:14px;line-height:1.8;color:var(--text-secondary);font-style:italic;">${original || "See input above"}</div>
+      </div>
+      <div style="margin-bottom:${notes && notes.toLowerCase() !== "none" ? "20px" : "0"};">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--purple-light);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(168,85,247,0.2);">✦ ENGLISH OUTPUT — अंग्रेज़ी</div>
+        <div style="font-family:'Noto Serif',serif;font-size:15px;line-height:1.8;color:var(--text-primary);">${converted}</div>
+      </div>
+      ${notes && notes.toLowerCase() !== "none" ? `
+      <div style="background:rgba(168,85,247,0.06);border:1px solid rgba(168,85,247,0.15);padding:14px 18px;margin-top:4px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;color:#A855F7;margin-bottom:8px;">📝 TRANSLATION NOTES</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:13px;color:var(--text-secondary);line-height:1.7;">${notes}</div>
+      </div>` : ""}`;
+    }
+
+    function copyResult() {
+      navigator.clipboard.writeText(document.getElementById("resultBody").innerText).then(() => {
+        const btn = document.querySelector(".copy-btn");
+        const orig = btn.textContent;
+        btn.textContent = "✓ COPIED!";
+        btn.style.color = "var(--jade)"; btn.style.borderColor = "var(--jade)";
+        setTimeout(() => { btn.textContent = orig; btn.style.color = ""; btn.style.borderColor = ""; }, 2000);
+      });
+    }
+
+    document.getElementById("purposeModal").addEventListener("click", function (e) {
+      if (e.target === this) closePurposeModal();
+    });
+  </script>
+</body>
+
+</html>

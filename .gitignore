@@ -1,0 +1,3 @@
+# ⚠️ IMPORTANT — never commit these
+.env
+node_modules/
